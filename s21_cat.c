@@ -12,38 +12,40 @@ arguments argument_parser(int argc, char** argv) {
                                   {"number-nonblank", no_argument, NULL, 'b'},
                                   {"squeeze-blank", no_argument, NULL, 's'},
                                   {0, 0, 0, 0}};
-  int option;
-  option = getopt_long(argc, argv, "bneEtTvs", long_options, 0);
-  switch (option) {
-    case 'b':
-      config.b = 1;
-      break;
-    case 'n':
-      config.n = 1;
-      break;
-    case 's':
-      config.s = 1;
-      break;
-    case 'e':
-      config.E = 1;
-      config.v = 1;
-      break;
-    case 'E':
-      config.E = 1;
-      break;
-    case 't':
-      config.T = 1;
-      config.v = 1;
-      break;
-    case 'T':
-      config.T = 1;
-      break;
-    case '?':
-      perror("ERROR");
-      exit(1);
-      break;
-    default:
-      break;
+  int option = 0;
+  while (option != -1) {
+    option = getopt_long(argc, argv, "bneEtTvs", long_options, 0);
+    switch (option) {
+      case 'b':
+        config.b = 1;
+        break;
+      case 'n':
+        config.n = 1;
+        break;
+      case 's':
+        config.s = 1;
+        break;
+      case 'e':
+        config.E = 1;
+        config.v = 1;
+        break;
+      case 'E':
+        config.E = 1;
+        break;
+      case 't':
+        config.T = 1;
+        config.v = 1;
+        break;
+      case 'T':
+        config.T = 1;
+        break;
+      case '?':
+        perror("ERROR");
+        exit(1);
+        break;
+      default:
+        break;
+    }
   }
   return config;
 }
@@ -101,14 +103,15 @@ void output(arguments* config, char** argv) {
     }
     if (config->s && empty_line > 1) {
     } else {
-      if (config->b || config->n) {
-        if (config->b && line[0] != '\n') {
-          printf("%6d\t", line_count);
-          line_count++;
-        } else if (config->n) {
-          printf("%6d\t", line_count);
-          line_count++;
-        }
+      if (config->b && config->n) {
+        config->n = 0;
+      }
+      if (config->b && line[0] != '\n') {
+        printf("%6d\t", line_count);
+        line_count++;
+      } else if (config->n) {
+        printf("%6d\t", line_count);
+        line_count++;
       }
       print_line(config, line, ch);
     }
