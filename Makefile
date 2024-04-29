@@ -4,7 +4,7 @@ FILE = file.txt
 CHECK = 2>&1 valgrind --tool=memcheck --leak-check=yes
 
 all: s21_cat tests
-s21_cat: clean
+s21_cat: clean Makefile s21_cat.h s21_cat.c
 	gcc $(FLAG) s21_cat.c -o s21_cat
 
 tests:

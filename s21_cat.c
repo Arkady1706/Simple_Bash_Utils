@@ -1,10 +1,10 @@
-#include <getopt.h>
-#include <stdio.h>
-#include <stdlib.h>
+#include "s21_cat.h"
 
-typedef struct arguments {
-  int b, n, s, E, T, v;
-} arguments;
+int main(int argc, char** argv) {
+  arguments config = argument_parser(argc, argv);
+  output(&config, argv);
+  return 0;
+}
 
 arguments argument_parser(int argc, char** argv) {
   arguments config = {0};
@@ -48,8 +48,6 @@ arguments argument_parser(int argc, char** argv) {
   return config;
 }
 
-void read_file() {}
-
 char print_v_line(char ch) {
   if (ch == '\n' || ch == '\t') {
     return ch;
@@ -85,6 +83,10 @@ void print_line(arguments* config, char* line, int n) {
 
 void output(arguments* config, char** argv) {
   FILE* f = fopen(argv[optind], "r");
+  if (f == NULL) {
+    perror("Error opening file");
+    exit(1);
+  }
   char* line = NULL;
   size_t memline = 0;
   int ch = 0;
@@ -114,10 +116,4 @@ void output(arguments* config, char** argv) {
   }
   free(line);
   fclose(f);
-}
-
-int main(int argc, char** argv) {
-  arguments config = argument_parser(argc, argv);
-  output(&config, argv);
-  return 0;
 }
