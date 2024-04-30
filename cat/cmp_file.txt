@@ -1,0 +1,34 @@
+Dog
+cat     ^I	
+^I	     elephant
+
+
+and   ^I	   giraffe
+
+
+
+        tiger
+                lion
+and a   duck     ^I	
+    a snake
+
+squirrel
+why
+quit
+Dog
+cat     ^I
+^I     elephant
+
+
+and   ^I   giraffe
+
+
+
+        tiger
+                lion
+and a   duck     ^I
+    a snake
+
+squirrel
+why
+quit
