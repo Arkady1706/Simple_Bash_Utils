@@ -2,7 +2,7 @@
 
 int main(int argc, char** argv) {
   arguments config = argument_parser(argc, argv);
-  output(&config, argv);
+  file_parser(&config, argc, argv);
   return 0;
 }
 
@@ -50,18 +50,44 @@ arguments argument_parser(int argc, char** argv) {
   return config;
 }
 
-char print_v_line(char ch) {
-  if (ch == '\n' || ch == '\t') {
-    return ch;
+void file_parser(arguments* config, int argc, char** argv) {
+  int line_count = 1;
+  int empty_line = 0;
+  for (int i = optind; i < argc; i++) {
+    FILE* f = fopen(argv[i], "r");
+    if (f == NULL) {
+      perror("Error opening file");
+      exit(1);
+    }
+    char* line = NULL;
+    size_t max = 0;
+    int ch = 0;
+    ch = getline(&line, &max, f);
+    while (ch != -1) {
+      if (line[0] == '\n') {
+        empty_line++;
+      } else {
+        empty_line = 0;
+      }
+      if (config->s && empty_line > 1) {
+      } else {
+        if (config->b && config->n) {
+          config->n = 0;
+        }
+        if (config->b && line[0] != '\n' && !config->new_line) {
+          printf("%6d\t", line_count);
+          line_count++;
+        } else if (config->n) {
+          printf("%6d\t", line_count);
+          line_count++;
+        }
+        print_line(config, line, ch);
+      }
+      ch = getline(&line, &max, f);
+    }
+    free(line);
+    fclose(f);
   }
-  if (ch <= 31) {
-    putchar('^');
-    ch = ch + 64;
-  } else if (ch == 127) {
-    putchar('^');
-    ch = '?';
-  }
-  return ch;
 }
 
 void print_line(arguments* config, char* line, int n) {
@@ -80,43 +106,24 @@ void print_line(arguments* config, char* line, int n) {
     if (flag == 0) {
       putchar(line[i]);
     }
+    if (line[i] != '\n') {
+      config->new_line = 1;
+    } else {
+      config->new_line = 0;
+    }
   }
 }
 
-void output(arguments* config, char** argv) {
-  FILE* f = fopen(argv[optind], "r");
-  if (f == NULL) {
-    perror("Error opening file");
-    exit(1);
+char print_v_line(char ch) {
+  if (ch == '\n' || ch == '\t') {
+    return ch;
   }
-  char* line = NULL;
-  size_t memline = 0;
-  int ch = 0;
-  int line_count = 1;
-  int empty_line = 0;
-  ch = getline(&line, &memline, f);
-  while (ch != -1) {
-    if (line[0] == '\n') {
-      empty_line++;
-    } else {
-      empty_line = 0;
-    }
-    if (config->s && empty_line > 1) {
-    } else {
-      if (config->b && config->n) {
-        config->n = 0;
-      }
-      if (config->b && line[0] != '\n') {
-        printf("%6d\t", line_count);
-        line_count++;
-      } else if (config->n) {
-        printf("%6d\t", line_count);
-        line_count++;
-      }
-      print_line(config, line, ch);
-    }
-    ch = getline(&line, &memline, f);
+  if (ch < 32) {
+    putchar('^');
+    ch = ch + 64;
+  } else if (ch == 127) {
+    putchar('^');
+    ch = '?';
   }
-  free(line);
-  fclose(f);
+  return ch;
 }

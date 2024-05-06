@@ -1,5 +1,5 @@
 SHELL:= /bin/bash
-FLAG = -Wall -Werror -Wextra
+FLAG = -Wall -Werror -Wextra -g
 FILE = file.txt
 CHECK = 2>&1 valgrind --tool=memcheck --leak-check=yes
 
@@ -31,3 +31,5 @@ tests:
 
 clean:
 	rm -f s21_cat
+
+.PHONY: all s21_cat tests clean
