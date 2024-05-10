@@ -1,5 +1,5 @@
 SHELL:= /bin/bash
-FLAG = -Wall -Werror -Wextra -g
+FLAG = -Wall -Werror -Wextra
 FILE = file.txt
 CHECK = 2>&1 valgrind --tool=memcheck --leak-check=yes
 
@@ -12,6 +12,7 @@ tests:
 	-diff <(./s21_cat -e $(FILE)) <(cat -e $(FILE))
 	-diff <(./s21_cat -E $(FILE)) <(cat -E $(FILE))
 	-diff <(./s21_cat -t $(FILE)) <(cat -t $(FILE))
+	-diff <(./s21_cat -v $(FILE)) <(cat -v $(FILE))
 	-diff <(./s21_cat -T $(FILE)) <(cat -T $(FILE))
 	-diff <(./s21_cat -s $(FILE)) <(cat -s $(FILE))
 	-diff <(./s21_cat --squeeze-blank $(FILE)) <(cat -s $(FILE))

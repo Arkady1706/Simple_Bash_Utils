@@ -19,6 +19,9 @@ arguments argument_parser(int argc, char** argv) {
       case 'b':
         config.b = 1;
         break;
+      case 'v':
+        config.v = 1;
+        break;
       case 'n':
         config.n = 1;
         break;
